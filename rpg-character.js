@@ -19,15 +19,20 @@ export class RpgCharacter extends DDDSuper(I18NMixin(LitElement)) {
     return "rpg-character";
   }
 
-  static properties() 
+  static properties=
   {
-  
+  organization: {type: String},
+  repo: {type: String},
+  limit: {type: Number},
+  contributors: {type: Array},
   }
 
   constructor() {
     super();
-    this.orgainization = "haxtheweb";
-    this.title = "";
+    this.organization = "haxtheweb";
+    this.repo = "webcomponents";
+    this.limit = 10;
+    this.contributors = [];
     this.t = this.t || {};
     this.t = {
       ...this.t,
