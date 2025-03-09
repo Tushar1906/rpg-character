@@ -5,6 +5,7 @@
 import { LitElement, html, css } from "lit";
 import { DDDSuper } from "@haxtheweb/d-d-d/d-d-d.js";
 import { I18NMixin } from "@haxtheweb/i18n-manager/lib/I18NMixin.js";
+import '@haxtheweb/rpg-character/rpg-character.js';
 
 /**
  * `rpg-character`
@@ -18,8 +19,14 @@ export class RpgCharacter extends DDDSuper(I18NMixin(LitElement)) {
     return "rpg-character";
   }
 
+  static properties() 
+  {
+  
+  }
+
   constructor() {
     super();
+    this.orgainization = "haxtheweb";
     this.title = "";
     this.t = this.t || {};
     this.t = {
@@ -69,7 +76,8 @@ export class RpgCharacter extends DDDSuper(I18NMixin(LitElement)) {
 <div class="wrapper">
   <h3><span>${this.t.title}:</span> ${this.title}</h3>
   <slot></slot>
-</div>`;
+</div>
+<github-rpg-contributors organization="haxtheweb" repo="webcomponents" limit="10"></github-rpg-contributors>`;
   }
 
   /**
