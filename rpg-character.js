@@ -47,6 +47,21 @@ export class RpgCharacter extends DDDSuper(I18NMixin(LitElement)) {
     });
   }
 
+async getData() {
+  const url = `https://api.github.com/repos/${this.organization}/${this.repo}/contributors`;
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Response status: ${response.status}`);
+    }
+
+    const json = await response.json();
+    console.log(json);
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
   // Lit reactive properties
   static get properties() {
     return {
