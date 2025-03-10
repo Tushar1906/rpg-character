@@ -93,9 +93,23 @@ async getData() {
   // Lit render the HTML
   render() {
     return html`
-<div class="wrapper">
-  <h3><span>${this.t.title}:</span> ${this.title}</h3>
-  <slot></slot>
+<div>
+  <a class="repo-link" href="https://github.com/${this.organization}/${this.repo}" target="_blank">
+    </a>
+    <div class="new-container">
+      ${this.contributors.map(
+        (contributor) => html`
+        <div class="container">
+          <rpg-character name="${contributor.login}"></rpg-character>
+          <br>
+          <a herf="${contributor.html_url}" target="_blank"></a>
+          <br>
+            Contributor: ${contributor.contributions}
+      </div>
+        
+        `
+      )}
+      </div>
 </div>
 <github-rpg-contributors organization="haxtheweb" repo="webcomponents" limit="10"></github-rpg-contributors>`;
   }
