@@ -67,6 +67,10 @@ async getData() {
     return {
       ...super.properties,
       title: { type: String },
+      organization: { type: String },
+      repo: { type: String },
+      limit: { type: Number },
+      contributors: { type: Array },
     };
   }
 
@@ -95,12 +99,13 @@ async getData() {
     return html`
 <div>
   <a class="repo-link" href="https://github.com/${this.organization}/${this.repo}" target="_blank">
+    ${this.organization}/${this.repo}
     </a>
     <div class="new-container">
       ${this.contributors.map(
         (contributor) => html`
         <div class="container">
-          <rpg-character name="${contributor.login}"></rpg-character>
+          <rpg-character seed="${contributor.login}" @click${() => this.getData()}></rpg-character>
           <br>
           <a herf="${contributor.html_url}" target="_blank"></a>
           <br>
