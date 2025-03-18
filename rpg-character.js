@@ -17,15 +17,10 @@ export class RpgCharacter extends DDDSuper(I18NMixin(LitElement)) {
 
   static get tag() {
     return "rpg-character";
-  }
+  };
 
-  static properties=
-  {
-  organization: {type: String},
-  repo: {type: String},
-  limit: {type: Number},
-  contributors: {type: Array},
-  }
+  
+  
 
   constructor() {
     super();
@@ -33,6 +28,7 @@ export class RpgCharacter extends DDDSuper(I18NMixin(LitElement)) {
     this.repo = "webcomponents";
     this.limit = 10;
     this.contributors = [];
+    this.title = "";
     this.t = this.t || {};
     this.t = {
       ...this.t,
@@ -47,18 +43,23 @@ export class RpgCharacter extends DDDSuper(I18NMixin(LitElement)) {
     });
   }
 
-async getData() {
+  //need to fix this
+getData() {
   const url = `https://api.github.com/repos/${this.organization}/${this.repo}/contributors`;
   try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`Response status: ${response.status}`);
-    }
-
-    const json = await response.json();
-    console.log(json);
+    fetch(url).then(d => d.ok ? d.json(): {}).then(data => {
+      if (data) {
+        this.contributors = [];
+        this.contributors = data;
+      }});
   } catch (error) {
     console.error(error.message);
+  }
+}
+updated(changedProperties) {
+  super.updated(changedProperties);
+  if (changedProperties.has("organization") || changedProperties.has("repo")) {
+    this.getData();
   }
 }
 
