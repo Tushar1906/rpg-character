@@ -24,8 +24,8 @@ export class RpgCharacter extends DDDSuper(I18NMixin(LitElement)) {
 
   constructor() {
     super();
-    this.organization = "haxtheweb";
-    this.repo = "webcomponents";
+    this.organization = '';
+    this.repo = '';
     this.limit = 10;
     this.contributors = [];
     this.title = "";
@@ -43,37 +43,21 @@ export class RpgCharacter extends DDDSuper(I18NMixin(LitElement)) {
     });
   }
 
-  //need to fix this
-getData() {
-  const url = `https://api.github.com/repos/${this.organization}/${this.repo}/contributors`;
-  try {
-    fetch(url).then(d => d.ok ? d.json(): {}).then(data => {
-      if (data) {
-        this.contributors = [];
-        this.contributors = data;
-      }});
-  } catch (error) {
-    console.error(error.message);
-  }
-}
-updated(changedProperties) {
-  super.updated(changedProperties);
-  if (changedProperties.has("organization") || changedProperties.has("repo")) {
-    this.getData();
-  }
-}
+    // Lit reactive properties
+    static get properties() {
+      return {
+        ...super.properties,
+        title: { type: String },
+        organization: { type: String },
+        repo: { type: String },
+        limit: { type: Number },
+        contributors: { type: Array },
+      };
+    }
+  
+  
 
-  // Lit reactive properties
-  static get properties() {
-    return {
-      ...super.properties,
-      title: { type: String },
-      organization: { type: String },
-      repo: { type: String },
-      limit: { type: Number },
-      contributors: { type: Array },
-    };
-  }
+
 
   // Lit scoped styles
   static get styles() {
@@ -92,32 +76,59 @@ updated(changedProperties) {
       h3 span {
         font-size: var(--rpg-character-label-font-size, var(--ddd-font-size-s));
       }
+   
+      .rpg-wrapper  {
+        display: inline-flex;
+      
+      }
+
     `];
   }
+
+  
+    //need to fix this
+
+    updated(changedProperties) {
+      super.updated(changedProperties);
+      if (changedProperties.has("organization") || changedProperties.has("repo")) {
+        this.getData();
+      }
+    }
+getData() {
+  const url = `https://api.github.com/repos/${this.organization}/${this.repo}/contributors`;
+  try {
+    fetch(url).then(d => d.ok ? d.json(): {}).then(data => {
+      if (data) {
+        this.contributors = [];
+        this.contributors = data;
+      }});
+  } catch (error) {
+    console.error(error.message);
+  }
+}
 
   // Lit render the HTML
   render() {
     return html`
-<div>
-  <a class="repo-link" href="https://github.com/${this.organization}/${this.repo}" target="_blank">
-    ${this.organization}/${this.repo}
-    </a>
-    <div class="new-container">
-      ${this.contributors.map(
-        (contributor) => html`
-        <div class="container">
-          <rpg-character seed="${contributor.login}" @click${() => this.getData()}></rpg-character>
-          <br>
-          <a herf="${contributor.html_url}" target="_blank"></a>
-          <br>
-            Contributor: ${contributor.contributions}
-      </div>
-        
+<div class="wrapper">
+<h3>GitHub Repo: <a href="https://github.com/${this.organization}/${this.repo}">${this.organization}/${this.repo}</a></h3>
+    ${this.contributors.filter((item, index) => index < this.limit).map((item) => 
+        html`
+        <div class="rpg-wrapper">
+        <rpg-character seed="${item.login}"></rpg-character>
+
+        <div class="content">
+
+        ${item.login}
+        Contributions: ${item.contributions}
+
+        </div>
+        </div>
+
         `
       )}
-      </div>
-</div>
-<github-rpg-contributors organization="haxtheweb" repo="webcomponents" limit="10"></github-rpg-contributors>`;
+    
+</div>`;
   }
 
   /**
